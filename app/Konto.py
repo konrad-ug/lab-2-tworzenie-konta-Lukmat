@@ -18,6 +18,7 @@ class Konto:
 
     def checkPromo(self, coupon):
         isValid = re.search("^PROM_", coupon) != None and len(coupon) == 8 and (int(self.pesel[0:2]) > 60 or int(self.pesel[2:4]) > 20)
+        
         if(isValid):
             self.saldo = 50
         else:
