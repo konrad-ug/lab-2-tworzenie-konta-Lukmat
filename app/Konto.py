@@ -23,4 +23,3 @@ class Konto:
             self.saldo = 50
         else:
             self.saldo = 0
-
