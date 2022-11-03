@@ -7,6 +7,7 @@ class Konto:
     def __init__(self, name, lastname, pesel, coupon=""):
         self.name = name
         self.lastname = lastname
+        self.history = []
         
         self.checkPesel(pesel)
         self.checkPromo(coupon)
@@ -30,9 +31,11 @@ class Konto:
             self.balance = self.balance
         else:
             self.balance -= ammount
+            self.history.append(-ammount)
 
     def process_incoming_transfer(self, ammount: int):
         self.balance += ammount
+        self.history.append(ammount)
 
     def process_outgoing_express_transfer(self, ammount: int):
         if self.balance - ammount < 0:
@@ -40,3 +43,5 @@ class Konto:
         else:
             self.balance -= ammount
             self.balance -= self.charge_for_express_transfer
+            self.history.append(-ammount)
+            self.history.append(-self.charge_for_express_transfer)
