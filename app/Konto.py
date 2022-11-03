@@ -3,9 +3,10 @@ import re
 
 
 class Konto:
-    def __init__(self, imie, nazwisko, pesel, coupon=""):
-        self.imie = imie
-        self.nazwisko = nazwisko
+    charge_for_express_transfer = 1
+    def __init__(self, name, lastname, pesel, coupon=""):
+        self.name = name
+        self.lastname = lastname
         
         self.checkPesel(pesel)
         self.checkPromo(coupon)
@@ -20,6 +21,22 @@ class Konto:
         isValid = re.search("^PROM_", coupon) != None and len(coupon) == 8 and (int(self.pesel[0:2]) > 60 or int(self.pesel[2:4]) > 20)
         
         if(isValid):
-            self.saldo = 50
+            self.balance = 50
         else:
-            self.saldo = 0
+            self.balance = 0
+
+    def process_outgoing_transfer(self, ammount: int):
+        if self.balance - ammount < 0:
+            self.balance = self.balance
+        else:
+            self.balance -= ammount
+
+    def process_incoming_transfer(self, ammount: int):
+        self.balance += ammount
+
+    def process_outgoing_express_transfer(self, ammount: int):
+        if self.balance - ammount < 0:
+            self.balance = self.balance
+        else:
+            self.balance -= ammount
+            self.balance -= self.charge_for_express_transfer
