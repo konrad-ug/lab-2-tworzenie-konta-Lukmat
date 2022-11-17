@@ -47,16 +47,21 @@ class Konto:
             self.history.append(-self.charge_for_express_transfer)
 
     def take_out_loan(self, ammount: int):
-        if len(self.history) < 3:
-            return False
-        if self.history[-1] > 0 and self.history[-2] > 0 and self.history[-3] > 0:
+        if self.is_last_n_transactions_incoming(3) or self.sum_of_last_n_transactions(5) > ammount: 
             self.balance += ammount
             return True
-        if len(self.history) < 5:
+        return False
+        
+    def is_last_n_transactions_incoming(self, n):
+        if len(self.history) < n:
             return False
-        if sum(self.history[-5:]) > ammount:
-            self.balance += ammount
-            return True
-        else:
+        for i in self.history[-n:]:
+            if i < 0:
+                return False
+        return True
+
+    def sum_of_last_n_transactions(self, n):
+        if len(self.history) < n:
             return False
+        return sum(self.history[-n:])
 

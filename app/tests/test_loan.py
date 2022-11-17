@@ -1,4 +1,5 @@
 import unittest
+from parameterized import parameterized
 
 from ..Konto import Konto
 
@@ -10,52 +11,18 @@ class TestCreateBankAccount(unittest.TestCase):
     def setUp(self):
         self.account = Konto(self.name, self.lastname, self.pesel)
 
-    def test_successful_loan_1(self):
-        self.account.history = [-100, 100, 100, 100]
-        is_granted = self.account.take_out_loan(500)
-        self.assertTrue(is_granted)
-        self.assertEqual(self.account.balance, 500)
-
-    def test_successful_loan_2(self):
-        self.account.history = [400, -50, 200, 100, -100]
-        is_granted = self.account.take_out_loan(500)
-        self.assertTrue(is_granted)
-        self.assertEqual(self.account.balance, 500)
-
-    def test_unsuccessful_loan_1(self):
-        self.account.history = [-100, -100, 200, -100, 200]
-        is_granted = self.account.take_out_loan(500)
-        self.assertFalse(is_granted)
-        self.assertEqual(self.account.balance, 0)
-
-    def test_unsuccessful_loan_2(self):
-        self.account.history = [-100, -100, 400, -100, 400]
-        is_granted = self.account.take_out_loan(500)
-        self.assertFalse(is_granted)
-        self.assertEqual(self.account.balance, 0)
-
-    def test_unsuccessful_loan_3(self):
-        self.account.history = [-100, -100, 400, -100, 100]
-        is_granted = self.account.take_out_loan(500)
-        self.assertFalse(is_granted)
-        self.assertEqual(self.account.balance, 0)
-
-    def test_unsuccessful_loan_4(self):
-        self.account.history = [100, 500]
-        is_granted = self.account.take_out_loan(500)
-        self.assertFalse(is_granted)
-        self.assertEqual(self.account.balance, 0)
-
-    def test_unsuccessful_loan_5(self):
-        self.account.history = []
-        is_granted = self.account.take_out_loan(500)
-        self.assertFalse(is_granted)
-        self.assertEqual(self.account.balance, 0)
-    
-    def test_unsuccessful_loan_6(self):
-        self.account.history = [100, 200, 100, -200]
-        is_granted = self.account.take_out_loan(500)
-        self.assertFalse(is_granted)
-        self.assertEqual(self.account.balance, 0)
-    
-
+    @parameterized.expand([
+        ([-100, 100, 100, 100], 500, True, 500),
+        ([400, -50, 200, 100, -100], 500, True, 500),
+        ([-100, -100, 200, -100, 200], 500, False, 0),
+        ([-100, -100, 400, -100, 400], 500, False, 0),
+        ([-100, -100, 400, -100, 100], 500, False, 0),
+        ([100, 500], 500, False, 0),
+        ([], 500, False, 0),
+        ([100, 200, 100, -200], 500, False, 0),
+    ])
+    def test_loan(self, history, ammount, expected_loan_decision, expected_balance):
+        self.account.history = history
+        is_granted = self.account.take_out_loan(ammount)
+        self.assertEqual(is_granted, expected_loan_decision)
+        self.assertEqual(self.account.balance, expected_balance)
