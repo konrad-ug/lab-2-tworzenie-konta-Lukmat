@@ -33,6 +33,23 @@ class KontoFirmowe:
             self.history.append(-ammount)
             self.history.append(-self.charge_for_express_transfer)
 
+    def take_out_loan(self, ammount: int):
+        if self.is_balance_twice_as_big_as_loan(ammount) and self.is_transfer_to_zus():
+            self.balance += ammount
+            return True
+        return False
+
+    def is_balance_twice_as_big_as_loan(self, ammount: int):
+        if self.balance > (ammount * 2):
+            return True
+        return False
+
+    def is_transfer_to_zus(self):
+        for i in self.history:
+            if i == -1775:
+                return True
+        return False
+
 
 
     
