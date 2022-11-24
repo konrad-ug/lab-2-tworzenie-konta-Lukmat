@@ -8,20 +8,24 @@ class TestAccountRegister(unittest.TestCase):
     pesel = "02310634908"
 
     @classmethod
-    def setUpClass(self):
-        self.account = Konto(self.name, self.lastname, self.pesel)
+    def setUpClass(cls):
+        account = Konto(cls.name, cls.lastname, cls.pesel)
+        RejestrKont.add_account(account)
 
     def test_1_add_account(self):
-        RejestrKont.add_account(self.account)
-        self.assertIn(self.account, RejestrKont.accounts)
+        account = Konto(self.name, self.lastname, self.pesel)
+        RejestrKont.add_account(account)
+        self.assertIn(account, RejestrKont.accounts)
 
     def test_2_find_account(self):
-        RejestrKont.add_account(self.account)
-        self.assertEqual(self.account, RejestrKont.find_account(self.account.pesel))
+        account = Konto(self.name, self.lastname, self.pesel)
+        RejestrKont.add_account(account)
+        self.assertEqual(account.pesel, RejestrKont.find_account(self.pesel).pesel)
 
     def test_3_count_accounts(self):
-        RejestrKont.add_account(self.account)
-        self.assertEqual(3, RejestrKont.count_accounts())
+        account = Konto(self.name, self.lastname, self.pesel)
+        RejestrKont.add_account(account)
+        self.assertEqual(4, RejestrKont.count_accounts())
     
     @classmethod
     def tearDownClass(cls):
