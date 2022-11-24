@@ -11,10 +11,8 @@ class RejestrKont:
     def find_account(cls, pesel):
         for account in cls.accounts:
             if account.pesel == pesel:
-                return account
+                return account[0].pesel
 
     @classmethod
     def count_accounts(cls):
         return len(cls.accounts)
-
-    
