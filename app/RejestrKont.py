@@ -16,5 +16,3 @@ class RejestrKont:
     @classmethod
     def count_accounts(cls):
         return len(cls.accounts)
-
-    
