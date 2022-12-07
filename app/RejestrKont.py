@@ -1,6 +1,6 @@
 from app.Konto import Konto
 
-class RejestrKont:
+class RejestrKont():
     accounts = []
 
     @classmethod
