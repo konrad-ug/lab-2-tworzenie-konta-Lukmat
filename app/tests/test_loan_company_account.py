@@ -1,13 +1,15 @@
 import unittest
 from parameterized import parameterized
-
 from ..KontoFirmowe import KontoFirmowe
+from unittest.mock import patch
 
 class TestCreateBankAccount(unittest.TestCase):
     company_name = "Januszex sp. z o.o"
-    nip = "6289735952"
+    nip = "5252674798"
 
-    def setUp(self):
+    @patch('app.KontoFirmowe.KontoFirmowe.is_nip_in_gov')
+    def setUp(self, mock_is_nip_in_gov):
+        mock_is_nip_in_gov.return_value = True
         self.account = KontoFirmowe(self.company_name, self.nip)
 
     @parameterized.expand([

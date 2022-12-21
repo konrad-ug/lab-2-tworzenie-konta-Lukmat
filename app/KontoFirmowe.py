@@ -1,17 +1,33 @@
 from calendar import c
 from app.Konto import Konto
+import requests
+import os
+import datetime
 
 
 class KontoFirmowe:
     charge_for_express_transfer = 5
     def __init__(self, company_name, nip):
         self.company_name = company_name
-        self.nip = nip if self.is_nip_correct(nip) else "Niepoprawny NIP!"
+        if self.is_nip_correct(nip):
+            self.nip = nip
+        else:
+            self.nip = "Pranie!"
         self.balance = 0
         self.history = []
     
     def is_nip_correct(self, nip):
-        return len(nip) == 10
+        return len(nip) == 10 and self.is_nip_in_gov(nip)
+
+    def is_nip_in_gov(self, nip):
+        url = os.getenv('BANK_APP_MF_URL', 'https://wl-test.mf.gov.pl/')
+        today = datetime.datetime.today().strftime('%Y-%m-%d')
+        nip_path = f"{url}api/search/nip/{nip}/?date={today}"
+        response = requests.get(nip_path)
+        print(f"Response dla nipu: {response.status_code}, {response.json()}")
+        if response.status_code == 200:
+            return True
+        return False
 
     def process_outgoing_transfer(self, ammount: int):
         if self.balance - ammount < 0:
