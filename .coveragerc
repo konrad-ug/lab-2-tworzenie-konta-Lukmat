@@ -1,0 +1,7 @@
+[run]
+omit =
+    api_tests/
+    app/api.py
+    app/KontoFirmowe.py
+    */site-packages/*
+    .venv/*
